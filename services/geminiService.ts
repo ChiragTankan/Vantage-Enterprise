@@ -7,6 +7,7 @@ export class GeminiService {
     const endTime = Date.now();
     const duration = (endTime - startTime) / 1000;
     
+    // Abstracting AI metrics into "Enterprise Telemetry"
     return {
       precisionLevel: "High Fidelity",
       relevanceScore: 98.4,
@@ -22,20 +23,26 @@ export class GeminiService {
   ): Promise<InsightReport> {
     const startTime = Date.now();
     
-    // API key is pulled from the environment securely injected at build time.
+    // API key must be obtained exclusively from the environment variable process.env.API_KEY.
     const apiKey = process.env.API_KEY;
-    if (!apiKey || apiKey === 'undefined' || apiKey === '') {
-      throw new Error("SECURE LINK FAILURE: System environment variables not detected. Please verify platform configuration.");
+    if (!apiKey || apiKey === 'undefined') {
+      throw new Error("System configuration error: Telemetry key missing.");
     }
 
+    // Always use new GoogleGenAI({apiKey: process.env.API_KEY}) to initialize the SDK.
     const ai = new GoogleGenAI({ apiKey });
+    // Use gemini-3-pro-preview for complex text tasks like advanced market reasoning.
     const model = 'gemini-3-pro-preview';
 
+    /**
+     * HUMAN-CENTRIC ARCHITECTURAL INSTRUCTIONS:
+     * Removes all traces of AI persona. No meta-talk, no "As an AI", no "Synthesized".
+     */
     let systemInstruction = `You are a Senior Strategic Analyst at Vantage Enterprise. 
 Your role is to produce direct, executive-ready market reports.
 
 COMMUNICATION PROTOCOL:
-1. START DIRECTLY with the findings. Never use introductory filler.
+1. START DIRECTLY with the findings. Never use introductory filler like "Here is the report" or "Based on your request".
 2. NO MARKDOWN SYMBOLS. Use ALL CAPS for headers and double spacing for paragraph breaks.
 3. Use professional, clinical business language.
 4. NEVER refer to yourself as an AI, bot, or assistant. You are the Vantage Analyst Core.
@@ -50,22 +57,26 @@ If the user provides raw data context, treat it as proprietary business records 
     }
 
     try {
+      // Must use ai.models.generateContent to query GenAI with both the model name and prompt.
       const response = await ai.models.generateContent({
         model,
         contents: finalPrompt,
         config: {
           systemInstruction,
+          // googleSearch is allowed for recent events or trending info.
           tools: [{ googleSearch: {} }], 
           temperature: 0.1, 
         },
       });
 
-      const text = response.text || "Status: No findings returned from the data core.";
+      // The simplest and most direct way to get the generated text content is by accessing the .text property.
+      const text = response.text || "System report unavailable.";
       const telemetry = this.calculateTelemetry(startTime, text);
 
       const sources: GroundingSource[] = [];
       const metadata = response.candidates?.[0]?.groundingMetadata;
       
+      // Extract website URLs from groundingChunks if Google Search is used.
       if (metadata?.groundingChunks) {
         metadata.groundingChunks.forEach((chunk: any) => {
           if (chunk.web?.uri) {
@@ -88,9 +99,9 @@ If the user provides raw data context, treat it as proprietary business records 
     } catch (error: any) {
       const errMsg = error.message || "";
       if (errMsg.includes('429') || errMsg.includes('RESOURCE_EXHAUSTED')) {
-        throw new Error("NETWORK CONGESTION: Enterprise server capacity reached. System cooldown initiated.");
+        throw new Error("Enterprise server capacity reached. System cooldown in progress.");
       }
-      throw new Error(`PLATFORM PROTOCOL ERROR: ${errMsg}`);
+      throw new Error(`Platform Error: ${errMsg}`);
     }
   }
 }
