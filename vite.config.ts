@@ -1,18 +1,17 @@
-
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(({ mode }) => {
-  // Load environment variables from the system or .env files.
-  // This prevents sensitive credentials from being committed to public version control.
+  // Load env file based on `mode` in the current working directory.
+  // This ensures that variables like API_KEY are available during build.
+  // Fix: Cast process to any to bypass typing conflict where 'Process' might refer to browser types instead of Node types
   const env = loadEnv(mode, (process as any).cwd(), '');
   
   return {
     plugins: [react()],
     define: {
-      // Inject the API key from the environment securely.
-      // If deployed on a platform like Vercel or Netlify, set API_KEY in their dashboard.
-      'process.env.API_KEY': JSON.stringify(env.API_KEY || process.env.API_KEY),
+      // Direct injection of the provided key while keeping the process.env.API_KEY reference in the app code
+      'process.env.API_KEY': JSON.stringify('AIzaSyCK53ENC5PZAK9TdmqUSwKY4cXBs9ir7yY'),
     },
     build: {
       outDir: 'dist',
