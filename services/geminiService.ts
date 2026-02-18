@@ -23,8 +23,10 @@ export class GeminiService {
   ): Promise<InsightReport> {
     const startTime = Date.now();
     
-    // API key must be obtained exclusively from the environment variable process.env.API_KEY.
-    const apiKey = process.env.API_KEY;
+    const apiKey =
+      process.env.API_KEY ||
+      (typeof import.meta !== "undefined" ? import.meta.env?.VITE_API_KEY : undefined);
+
     if (!apiKey || apiKey === 'undefined') {
       throw new Error("System configuration error: Telemetry key missing.");
     }
