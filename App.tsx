@@ -26,7 +26,7 @@ import {
   Terminal
 } from 'lucide-react';
 import { AppMode, InsightReport, SystemTelemetry, GroundingSource } from './types';
-import { geminiService } from './services/geminiService';
+import { chatService } from './services/chatService';
 import { memoryService } from './services/memoryService';
 
 const STRATEGIC_TEMPLATES = [
@@ -178,11 +178,11 @@ const App: React.FC = () => {
         setStatusText("Aggregating internal data...");
         const context = await memoryService.retrieveRelevantContext(prompt, rawData);
         setStatusText("Compiling report...");
-        const result = await geminiService.processRequest(prompt, mode, strategy, context);
+        const result = await chatService.processRequest(prompt, mode, strategy, context);
         setReport(result);
       } else {
         setStatusText("Querying market vectors...");
-        const result = await geminiService.processRequest(prompt, mode, strategy);
+        const result = await chatService.processRequest(prompt, mode, strategy);
         setReport(result);
       }
     } catch (err: any) {

@@ -1,19 +1,23 @@
-
 {
   "name": "vantage-ecommerce-agent",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"npm:dev:client\" \"npm:dev:server\"",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:client": "vite",
+    "dev:server": "node server/index.js"
   },
   "dependencies": {
-    "@google/genai": "^1.41.0",
     "lucide-react": "^0.468.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
@@ -23,6 +27,7 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
     "typescript": "^5.7.2",
-    "vite": "^6.0.3"
+    "vite": "^6.0.3",
+    "concurrently": "^9.2.1"
   }
 }

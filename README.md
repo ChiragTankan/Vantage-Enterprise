@@ -1,37 +1,34 @@
-# 🌐 Vantage Strategic Intelligence
-**Enterprise-grade strategic data environment for professional e-commerce management.**
+# Vantage Enterprise
 
----
+Strategic intelligence workspace with a React frontend and secure Node.js backend proxy for ASI One.
 
-## 🚀 Platform Overview
-Vantage Enterprise is a custom-built environment designed for high-stakes business decision-making. It bridges the gap between raw data and executive action through high-fidelity research cores and forensic audit capabilities.
+## Environment setup
 
-### 🛠️ Platform Suite Capabilities
-| Feature | Description |
-| :--- | :--- |
-| **Grounded Market Research** | Native external data nexus for real-world competitive accuracy. |
-| **Dataset Forensic Core** | Custom ingestion logic optimized for proprietary review and product logs. |
-| **Direct Context Memory** | Persistent system state tracking that aligns insights with business directives. |
-| **Performance Telemetry** | Real-time visibility into system latency and report precision metrics. |
-| **Dual Vectoring Hub** | Seamless workflow transition between rapid research and deep data audits. |
-| **Executive Interface** | Clean, high-fidelity professional environment with multi-mode visual themes. |
+1. Copy `.env.example` to `.env`.
+2. Set your ASI One key in `.env`:
 
----
+```env
+ASI_ONE_API_KEY=PASTE_MY_ASI_ONE_KEY_HERE
+TELEMETRY_KEY=disable_if_not_used
+```
 
-## 🎯 Strategic Task Presets
-* **Strategic Research:** Identify top material innovation trends in sustainable markets.
-* **Market Positioning:** Extract core pricing tiers and discounting patterns for industry leaders.
-* **Operational Audit:** Conduct sentiment audits on premium feedback to identify feature gaps.
-* **Growth Vectoring:** Forecast underserved product niches based on emerging consumer interest.
+Telemetry is optional. If `TELEMETRY_KEY` is not set (or left as `disable_if_not_used`), telemetry is safely disabled.
 
----
+## Run locally
 
-## 👥 Development Team
-This project is developed and maintained by **Team KSB 48**.
+```bash
+rm -rf node_modules
+npm install
+npm run dev
+```
 
-* **Team Leader:** Chirag Tankan
-* **Workspace Status:** `Enterprise Ready`
-* **Protocol:** `Executive Brief`
+- Frontend: `http://localhost:3000`
+- Backend API: `http://localhost:8787`
 
----
-> **Note:** This environment is secured and optimized for internal forensic and external research cores.
+All model requests are sent through `/api/chat` on the backend so the ASI One API key is never exposed to the frontend.
+
+
+## Vercel deployment
+
+Set `ASI_ONE_API_KEY` and optional `TELEMETRY_KEY` in Vercel Project Settings → Environment Variables.
+The deployed app uses serverless routes at `/api/chat` and `/api/health`.
