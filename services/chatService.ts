@@ -20,19 +20,26 @@ export class ChatService {
       })
     });
 
+    // Read raw response safely
     const rawBody = await response.text();
 
     let data: any = {};
+
     if (rawBody) {
       try {
         data = JSON.parse(rawBody);
       } catch {
-        throw new Error(`Invalid API response (${response.status}). Please verify backend deployment and /api/chat route.`);
+        throw new Error(
+          `Invalid API response (${response.status}). Please verify backend deployment and /api/chat route.`
+        );
       }
     }
 
+    // Handle non-200 responses safely
     if (!response.ok) {
-      throw new Error(data.error || `Request failed with status ${response.status}.`);
+      throw new Error(
+        data?.error || `Request failed with status ${response.status}.`
+      );
     }
 
     return data as InsightReport;
